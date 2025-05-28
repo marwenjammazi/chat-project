@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://chat-project-virid.vercel.app",
+    origin: ["https://chat-project-virid.vercel.app", "http://localhost:5173"],
     credentials: true,
   })
 );
