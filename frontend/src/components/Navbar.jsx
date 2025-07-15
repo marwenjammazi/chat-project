@@ -6,11 +6,18 @@ import { useThemeStore } from "./store/useThemeStore";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
-  const { theme } = useThemeStore();
+  const { theme, setTheme } = useThemeStore();
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme || "lofi");
-  }, [theme]);
+    // Force theme to "lofi" if not set
+    if (!localStorage.getItem("chat-theme")) {
+      localStorage.setItem("chat-theme", "lofi");
+      setTheme("lofi");
+      document.documentElement.setAttribute("data-theme", "lofi");
+    } else {
+      document.documentElement.setAttribute("data-theme", theme || "lofi");
+    }
+  }, [theme, setTheme]);
 
   return (
     <header
