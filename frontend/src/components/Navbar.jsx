@@ -1,9 +1,16 @@
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { LogOut, MessageSquare, Settings, User } from "lucide-react";
+import { useEffect } from "react";
+import { useThemeStore } from "./store/useThemeStore";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
+  const { theme } = useThemeStore();
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme || "lofi");
+  }, [theme]);
 
   return (
     <header
