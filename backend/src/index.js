@@ -2,11 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
 import path from "path";
 
 import { connectDB } from "./lib/db.js";
-
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
@@ -22,7 +20,7 @@ app.use(
   cors({
     origin: ["https://chat-project-virid.vercel.app", "http://localhost:5173"],
     credentials: true,
-  })
+  }),
 );
 
 app.use("/api/auth", authRoutes);
@@ -36,7 +34,20 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-server.listen(PORT, () => {
-  console.log("server is running on PORT:" + PORT);
-  connectDB();
+// ✅ Error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Internal Server Error" });
 });
+
+// ✅ Connect DB first, then start server
+connectDB()
+  .then(() => {
+    server.listen(PORT, () => {
+      console.log("Server running on PORT:", PORT);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to DB:", err.message);
+    process.exit(1); // stop if DB connection fails
+  });

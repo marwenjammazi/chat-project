@@ -15,6 +15,7 @@ const ChatContainer = () => {
     selectedUser,
     subscribeToMessages,
     unsubscribeFromMessages,
+    isTyping, // <-- Make sure your store provides this
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
@@ -90,6 +91,25 @@ const ChatContainer = () => {
             </div>
           </div>
         ))}
+        {/* Typing indicator */}
+        {isTyping && (
+          <div className="chat chat-start">
+            <div className="chat-image avatar">
+              <div className="size-10 rounded-full border">
+                <img
+                  src={selectedUser.profilePic || "/avatar.png"}
+                  alt="profile pic"
+                />
+              </div>
+            </div>
+            <div className="chat-bubble flex items-center gap-2 bg-base-200">
+              <span className="animate-pulse text-sm text-primary">
+                Typing...
+              </span>
+              <span className="w-2 h-2 rounded-full bg-primary animate-bounce"></span>
+            </div>
+          </div>
+        )}
       </div>
 
       <MessageInput />
